@@ -1,49 +1,64 @@
+//instantiating I/O plugins
 const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', true);
+const Rant = require('./models/rant');
+const { rawListeners } = require('./models/rant');
+const { result } = require('lodash');
+
 
 // express app
 const app = express();
 
-//register vire engine
+
+
+// connect to mongoDB
+const dbURI = 'mongodb+srv://animeguy:the1sthokage@nodecrashcoursecluster.ip9dy48.mongodb.net/node-anime-raver?retryWrites=true&w=majority';
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+.then((result) => app.listen(3000))
+.catch((err) => console.log(err));
+
+
+
+//register view engine
 app.set('view engine', 'ejs');
 
-// listen for requests
-app.listen(3000);
-
-app.use((req, res, next) => {
-    console.log('new request made:');
-    console.log('host: ', req.hostname);
-    console.log('path: ', req.path);
-    console.log('method: ', req.method);
-    next();
-
-});
-
-app.use((req, res, next) => {
-    console.log('in the next middleware');
-    next();
-
-});
 
 
+
+// middleware and static files
+app.use(express.static('public'));
+app.use(morgan('dev'));
+
+
+
+
+ 
+// routes
 app.get('/', (req, res) => {
-    const blogs = [
-        {title: "Chainsaw Man is the best anime out right now and it isn't close", snippet: 'duh duh duh duh duh duh'},
-        {title: "How My Hero Academia saved my life...", snippet: 'Midoriya was just a kid who wanted to be like his heroes'},
-        {title: "The best anime swords to start your anime sword collection", snippet: 'The answer is Demon Slayer, obvi...'},
-       ];
-
-    res.render('index', {title: 'Home', blogs });
+   res.redirect('/rants');
 
 });
 
-app.use((req, res, next) => {
-    console.log('in the next middleware');
-    next();
-});
+
 
 app.get('/about', (req, res) => {
     res.render('about', {title: 'About'});
 });
+
+
+// rant routes
+app.get('/rants', (req, res) => {
+    Rant.find().sort({ createdAt: -1 })
+    .then((result) => {
+        res.render('index', { title: 'All Rants', rants: result })
+
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+})
 
 app.get('/blogs/create', (req, res) =>{
     res.render('create', {title: 'Create a New Rant'});

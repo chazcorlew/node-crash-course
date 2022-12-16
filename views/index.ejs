@@ -6,13 +6,13 @@
 
     <%- include('./partials/nav.ejs') %>
 
-    <div class="blogs content">
-        <h2>All Entries</h2>
+    <div class="rants content">
+        <h2>All Rants</h2>
 
-        <% if (blogs.length > 0) { %>
-            <% blogs.forEach(blog => { %>
-                <h3 class="title"><%= blog.title %></h3>
-                <p class="snippet"><%= blog.snippet %></p>
+        <% if (rants.length > 0) { %>
+            <% rants.forEach(rant => { %>
+                <h3 class="title"><%= rant.title %></h3>
+                <p class="snippet"><%= rant.snippet %></p>
                 
             <% }) %>
         <% } else { %>
