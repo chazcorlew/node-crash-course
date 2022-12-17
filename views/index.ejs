@@ -11,9 +11,11 @@
 
         <% if (rants.length > 0) { %>
             <% rants.forEach(rant => { %>
+                
+                <a class="single" href="/rants/<%= rant._id %>">
                 <h3 class="title"><%= rant.title %></h3>
                 <p class="snippet"><%= rant.snippet %></p>
-                
+                </a>
             <% }) %>
         <% } else { %>
             <p>There are no rants to display...</p>
