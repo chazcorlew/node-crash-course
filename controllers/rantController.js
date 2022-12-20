@@ -17,7 +17,7 @@ const rant_details = (req, res) => {
       res.render('details', { rant: result, title: 'Rant Details' });
     })
     .catch(err => {
-      console.log(err);
+      res.status(404).render('404', { title: 'Rant not found' });
     });
 }
 
